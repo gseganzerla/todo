@@ -12,16 +12,26 @@ import {
   Tr,
 } from '@chakra-ui/react'
 import type { NextPage } from 'next'
-import Link from 'next/link'
 import { RiAddLine, RiCheckLine, RiCloseLine, RiEye2Line } from 'react-icons/ri'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { Content } from '../components/Content'
 import { Header } from '../components/Header'
 import { IconButton } from '../components/IconButton'
-import { fetchTasks } from '../services/task'
+import { useTask } from '../contexts/TaskContext'
+import { fetchTasks, Task, updateTask } from '../services/task'
 
 const Home: NextPage = () => {
   const { data, isLoading, isFetching } = useQuery('tasks', fetchTasks)
+  const { task: taskShow, setTask } = useTask()
+
+  const { mutateAsync, isLoading: isMutationLoading } = useMutation(updateTask)
+
+  async function handleToggleTask(task: Task) {
+    task.is_finished = !task.is_finished
+    setTask(task)
+
+    await mutateAsync(task)
+  }
 
   return (
     <Box>
@@ -33,11 +43,11 @@ const Home: NextPage = () => {
               Tasks
               {!isLoading && isFetching && <Spinner color="gray.500" ml="4" />}
             </Heading>
-            <Link href="/create" passHref>
-              <IconButton as="a" icon={RiAddLine}>
-                Add Task
-              </IconButton>
-            </Link>
+            {/* <Link href="/create" passHref> */}
+            <IconButton as="a" icon={RiAddLine}>
+              Add Task
+            </IconButton>
+            {/* </Link> */}
           </Flex>
 
           {isLoading ? (
@@ -71,7 +81,13 @@ const Home: NextPage = () => {
                         </IconButton>
                         <IconButton
                           colorScheme="purple"
-                          icon={task.is_finished ? RiCheckLine : RiCloseLine}
+                          icon={task.is_finished ? RiCloseLine : RiCheckLine}
+                          onClick={() => handleToggleTask(task)}
+                          isLoading={
+                            isMutationLoading
+                              ? task.id === taskShow.id
+                              : isMutationLoading
+                          }
                         >
                           {task.is_finished ? 'Undo' : 'Done'}
                         </IconButton>

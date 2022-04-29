@@ -18,3 +18,11 @@ export const fetchTaskById = async (id: string): Promise<Task> => {
 
   return data.task
 }
+
+export const updateTask = async (task: Task): Promise<Task> => {
+  const { data } = await api.put(`tasks/${task.id}`, {
+    task: task,
+  })
+
+  return data.task
+}

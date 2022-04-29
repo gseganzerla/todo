@@ -1,6 +1,6 @@
+import faker from '@faker-js/faker'
 import { ActiveModelSerializer, createServer, Factory, Model } from 'miragejs'
 import { Task } from './task'
-import faker from '@faker-js/faker'
 
 export function makeServer() {
   const server = createServer({
@@ -8,7 +8,7 @@ export function makeServer() {
       application: ActiveModelSerializer,
     },
     models: {
-      task: Model.extend<Partial<Task>>({}),
+      task: Model.extend<Partial<Task>>({} as Task),
     },
     factories: {
       task: Factory.extend({
@@ -16,7 +16,7 @@ export function makeServer() {
           return faker.word.preposition()
         },
         isFinished() {
-          return faker.datatype.boolean()
+          return false
         },
         createdAt() {
           return faker.date.recent(5)
@@ -28,10 +28,11 @@ export function makeServer() {
     },
     routes() {
       this.namespace = 'api'
-      this.timing = 300
+      this.timing = 500
 
-      this.get('tasks')
-      this.get('tasks/:id')
+      this.get('/tasks')
+      this.get('/tasks/:id')
+      this.put('/tasks/:id')
 
       this.namespace = ''
       this.passthrough()
