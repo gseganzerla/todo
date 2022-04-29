@@ -31,6 +31,7 @@ export function makeServer() {
       this.timing = 300
 
       this.get('tasks')
+      this.get('tasks/:id')
 
       this.namespace = ''
       this.passthrough()

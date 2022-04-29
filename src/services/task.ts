@@ -12,3 +12,9 @@ export const fetchTasks = async (): Promise<Task[]> => {
 
   return data.tasks
 }
+
+export const fetchTaskById = async (id: string): Promise<Task> => {
+  const { data } = await api.get(`tasks/${id}`)
+
+  return data.task
+}
