@@ -73,13 +73,13 @@ const Home: NextPage = () => {
                     <Td>{task.is_finished ? 'Finished' : 'Not finished'}</Td>
                     <Td>
                       <ButtonGroup size="sm" isAttached>
-                        <IconButton
+                        {/* <IconButton
                           colorScheme="yellow"
                           disabled
                           icon={RiEye2Line}
                         >
                           View
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                           colorScheme="purple"
                           icon={task.is_finished ? RiCloseLine : RiCheckLine}
