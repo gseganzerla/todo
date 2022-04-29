@@ -12,6 +12,7 @@ import {
   Tr,
 } from '@chakra-ui/react'
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import { RiAddLine, RiCheckLine, RiCloseLine, RiEye2Line } from 'react-icons/ri'
 import { useMutation, useQuery } from 'react-query'
 import { Content } from '../components/Content'
@@ -43,11 +44,11 @@ const Home: NextPage = () => {
               Tasks
               {!isLoading && isFetching && <Spinner color="gray.500" ml="4" />}
             </Heading>
-            {/* <Link href="/create" passHref> */}
-            <IconButton as="a" icon={RiAddLine}>
-              Add Task
-            </IconButton>
-            {/* </Link> */}
+            <Link href="/create" passHref>
+              <IconButton as="a" icon={RiAddLine}>
+                Add Task
+              </IconButton>
+            </Link>
           </Flex>
 
           {isLoading ? (

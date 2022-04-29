@@ -31,6 +31,7 @@ export function makeServer() {
       this.timing = 500
 
       this.get('/tasks')
+      this.post('/tasks')
       this.get('/tasks/:id')
       this.put('/tasks/:id')
 
