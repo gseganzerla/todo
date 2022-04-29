@@ -3,6 +3,7 @@ import {
   ButtonGroup,
   Flex,
   Heading,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -12,19 +13,26 @@ import {
 } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { RiAddLine, RiCheckLine, RiEye2Line } from 'react-icons/ri'
+import { RiAddLine, RiCheckLine, RiCloseLine, RiEye2Line } from 'react-icons/ri'
+import { useQuery } from 'react-query'
 import { Content } from '../components/Content'
 import { Header } from '../components/Header'
 import { IconButton } from '../components/IconButton'
+import { fetchTasks } from '../services/task'
 
 const Home: NextPage = () => {
+  const { data, isLoading, isFetching } = useQuery('tasks', fetchTasks)
+
   return (
     <Box>
       <Header />
       <Content>
         <Box flex="1" borderRadius={8} bg="gray.800" p="8">
           <Flex justify="space-between" align="center" mb="8">
-            <Heading>Tasks</Heading>
+            <Heading>
+              Tasks
+              {!isLoading && isFetching && <Spinner color="gray.500" ml="4" />}
+            </Heading>
             <Link href="/create" passHref>
               <IconButton as="a" icon={RiAddLine}>
                 Add Task
@@ -32,33 +40,48 @@ const Home: NextPage = () => {
             </Link>
           </Flex>
 
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Title</Th>
-                <Th>Created at</Th>
-                <Th>Status</Th>
-                <Th>Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>Do anything</Td>
-                <Td>22/04/22</Td>
-                <Td>Finished</Td>
-                <Td>
-                  <ButtonGroup size="sm" isAttached>
-                    <IconButton colorScheme="yellow" disabled icon={RiEye2Line}>
-                      View
-                    </IconButton>
-                    <IconButton colorScheme="purple" icon={RiCheckLine}>
-                      Done
-                    </IconButton>
-                  </ButtonGroup>
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
+          {isLoading ? (
+            <Flex justify="center">
+              <Spinner size="lg" />
+            </Flex>
+          ) : (
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th>Title</Th>
+                  <Th>Created at</Th>
+                  <Th>Status</Th>
+                  <Th>Action</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {data?.map((task) => (
+                  <Tr key={task.id}>
+                    <Td>{task.title}</Td>
+                    <Td>{task.created_at}</Td>
+                    <Td>{task.is_finished ? 'Finished' : 'Not finished'}</Td>
+                    <Td>
+                      <ButtonGroup size="sm" isAttached>
+                        <IconButton
+                          colorScheme="yellow"
+                          disabled
+                          icon={RiEye2Line}
+                        >
+                          View
+                        </IconButton>
+                        <IconButton
+                          colorScheme="purple"
+                          icon={task.is_finished ? RiCheckLine : RiCloseLine}
+                        >
+                          {task.is_finished ? 'Undo' : 'Done'}
+                        </IconButton>
+                      </ButtonGroup>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          )}
         </Box>
       </Content>
     </Box>
