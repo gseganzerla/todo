@@ -21,12 +21,14 @@ import { IconButton } from '../components/IconButton'
 import { ModalShowTask } from '../components/ModalShowTask'
 import { useModalShowTask } from '../contexts/ModalShowTaskContext'
 import { useTask } from '../contexts/TaskContext'
+import { useWideVersion } from '../hooks/useWideVersion'
 import { fetchTasks, Task, updateTask } from '../services/task'
 
 const Home: NextPage = () => {
   const { data, isLoading, isFetching } = useQuery('tasks', fetchTasks)
   const { task: taskShow, setTask } = useTask()
   const { onOpen } = useModalShowTask()
+  const isWideVersion = useWideVersion()
 
   const { mutateAsync, isLoading: isMutationLoading } = useMutation(updateTask)
 
@@ -71,7 +73,7 @@ const Home: NextPage = () => {
                 <Thead>
                   <Tr>
                     <Th>Title</Th>
-                    <Th>Created at</Th>
+                    {isWideVersion && <Th>Created At</Th>}
                     <Th>Status</Th>
                     <Th>Action</Th>
                   </Tr>
@@ -80,7 +82,7 @@ const Home: NextPage = () => {
                   {data?.map((task) => (
                     <Tr key={task.id}>
                       <Td>{task.title}</Td>
-                      <Td>{task.created_at}</Td>
+                      {isWideVersion && <Td>{task.created_at}</Td>}
                       <Td>{task.is_finished ? 'Finished' : 'Not finished'}</Td>
                       <Td>
                         <ButtonGroup size="sm" isAttached>
