@@ -22,15 +22,15 @@ import { ModalShowTask } from '../components/ModalShowTask'
 import { useModalShowTask } from '../contexts/ModalShowTaskContext'
 import { useTask } from '../contexts/TaskContext'
 import { useWideVersion } from '../hooks/useWideVersion'
-import { fetchTasks, Task, updateTask } from '../services/task'
+import { queryClient } from '../services/queryClient'
+import { fetchTaskById, fetchTasks, Task, updateTask } from '../services/task'
 
 const Home: NextPage = () => {
   const { data, isLoading, isFetching } = useQuery('tasks', fetchTasks)
-  const { task: taskShow, setTask } = useTask()
   const { onOpen } = useModalShowTask()
-  const isWideVersion = useWideVersion()
-
   const { mutateAsync, isLoading: isMutationLoading } = useMutation(updateTask)
+  const { task: taskShow, setTask } = useTask()
+  const isWideVersion = useWideVersion()
 
   async function handleToggleTask(task: Task) {
     task.is_finished = !task.is_finished
@@ -42,6 +42,12 @@ const Home: NextPage = () => {
   function handleModalShowTask(task: Task) {
     setTask(task)
     onOpen()
+  }
+
+  async function handlePrefecthTask(task: Task) {
+    await queryClient.prefetchQuery(['task', task.id], () =>
+      fetchTaskById(task.id)
+    )
   }
 
   return (
@@ -85,7 +91,11 @@ const Home: NextPage = () => {
                       {isWideVersion && <Td>{task.created_at}</Td>}
                       <Td>{task.is_finished ? 'Finished' : 'Not finished'}</Td>
                       <Td>
-                        <ButtonGroup size="sm" isAttached>
+                        <ButtonGroup
+                          size="sm"
+                          isAttached
+                          onMouseEnter={() => handlePrefecthTask(task)}
+                        >
                           <IconButton
                             colorScheme="yellow"
                             icon={RiEye2Line}
