@@ -16,7 +16,7 @@ export const TaskContext = createContext<TaskContextData>({} as TaskContextData)
 
 export function TaskProvider({ children }: TaskProviderProps) {
   const [task, setTask] = useState({} as Task)
-  const query = useQuery(['tasks', task.id], () => fetchTaskById(task.id), {
+  const query = useQuery(['task', task.id], () => fetchTaskById(task.id), {
     enabled: !!task?.id,
   })
 
