@@ -1,11 +1,11 @@
 import { Stack, StackProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface StackedButtonProps extends StackProps {
+interface StackedButtonGroupProps extends StackProps {
   children: ReactNode
 }
 
-export function StackedGroupButton({ children, ...rest }: StackedButtonProps) {
+export function StackedButtonGroup({ children, ...rest }: StackedButtonGroupProps) {
   return (
     <Stack
       maxW={1480}

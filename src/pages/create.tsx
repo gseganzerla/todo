@@ -12,7 +12,7 @@ import { useMutation } from 'react-query'
 import { Content } from '../components/Content'
 import { Input } from '../components/Form/Input'
 import { Header } from '../components/Header'
-import { StackedGroupButton } from '../components/StackedGroupButton'
+import { StackedButtonGroup } from '../components/StackedButtonGroup'
 import { queryClient } from '../services/queryClient'
 import { CreateTaskFromData, storeTask } from '../services/task'
 
@@ -56,12 +56,12 @@ export default function CreateTask() {
             </Checkbox>
           </SimpleGrid>
 
-          <StackedGroupButton mt="5">
+          <StackedButtonGroup mt="5">
             <Button colorScheme="whiteAlpha">Cancel</Button>
             <Button type="submit" isLoading={isLoading}>
               Save
             </Button>
-          </StackedGroupButton>
+          </StackedButtonGroup>
         </Box>
       </Content>
     </Box>
